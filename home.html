@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Home</title>
+  <link rel="stylesheet" href="home.css">
+
+  <!-- Toastify CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+  <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
+</head>
+
+<body>
+  <header>
+    <h1>Welcome to Your Calendar</h1>
+    <button id="logout">Logout</button>
+  </header>
+
+  <div class="calendar-container">
+    <h2>Sync & Share Calendars</h2>
+    <button id="syncCalendar">Sync Calendar</button>
+    <button id="shareCalendar">Share Calendar</button>
+    <button id="googleSync">Sync with Google Calendar</button>
+
+    <h2>Schedule Events</h2>
+    <form id="eventForm">
+      <input type="text" id="eventTitle" placeholder="Event Title" required>
+      <input type="datetime-local" id="eventDateTime" required>
+      <input type="text" id="eventVenue" placeholder="Venue" required>
+      <button type="submit" id="submitBtn">Add Event</button>
+    </form>
+
+    <h2>Your Events</h2>
+    <ul id="eventList"></ul>
+  </div>
+
+  <!-- Toastify JS -->
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script src="home.js"></script>
+</body>
+</html>

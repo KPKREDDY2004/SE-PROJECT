@@ -1,0 +1,116 @@
+/* General Page Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+/* Header */
+header {
+    background: #2c3e50;
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+#logout {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+#logout:hover {
+    background-color: #c0392b;
+}
+
+/* Main Container */
+.calendar-container {
+    max-width: 600px;
+    background: white;
+    padding: 20px;
+    margin: 20px auto;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+/* Buttons */
+button {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* Calendar Sync & Share Buttons */
+#syncCalendar {
+    background: #3498db;
+    color: white;
+}
+
+#syncCalendar:hover {
+    background: #2980b9;
+}
+
+#shareCalendar {
+    background: #27ae60;
+    color: white;
+}
+
+#shareCalendar:hover {
+    background: #219150;
+}
+
+/* Event Form */
+#eventForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#eventForm input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+#eventForm button {
+    background: #f39c12;
+    color: white;
+}
+
+#eventForm button:hover {
+    background: #e67e22;
+}
+
+/* Event List */
+#eventList {
+    list-style: none;
+    padding: 0;
+}
+
+#eventList li {
+    background: #ecf0f1;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    font-size: 16px;
+}
