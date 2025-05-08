@@ -1,4 +1,6 @@
 # SE-PROJECT
+NOTE:- Kindly see this readme file in code formate not in preview because you will understand how your foulder structure should be which will make clear understanding
+
 firstly we need to create a project foulder. And inside the foulder we need to create a public foulder in that foulder place your .html, .js and .css. If there are any photos place thim in public foulder. And all the package.json files and server.js file should not be in public foulder they should be in main project foulder. Brelow is the example of foulder structure
 
 calendar-app/
