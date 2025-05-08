@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="admin.css">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>Admin Panel</h2>
+    <ul>
+      <li onclick="showPage('dashboard')"><i class="fas fa-home"></i> Dashboard</li>
+      <li onclick="showPage('users')"><i class="fas fa-users"></i> Users</li>
+    </ul>
+  </div>
+
+  <div class="main-content">
+    <!-- Dashboard Page -->
+    <div id="dashboard" class="page">
+      <h1>Dashboard</h1>
+      <div class="cards">
+        <div class="card">Total Users: <span id="totalUsers">0</span></div>
+        <div class="card">Active Users: <span id="activeUsers">0</span></div>
+      </div>
+    </div>
+
+    <!-- Users Management Page -->
+    <div id="users" class="page" style="display: none;">
+      <div class="header">
+        <h1>Manage Users</h1>
+        <button class="btn-add-user" onclick="openUserForm()">+ Add User</button>
+      </div>
+
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Password</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="userList">
+          <!-- Dynamic User Rows Will Come Here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Add User Form Popup -->
+  <div id="userForm" class="user-form" style="display: none;">
+    <h2>Add User</h2>
+    <input type="text" placeholder="Enter Name" id="userName" required>
+    <input type="email" placeholder="Enter Email" id="userEmail" required>
+    <input type="password" placeholder="Enter Password" id="userPassword" required>
+    <div class="form-buttons">
+      <button onclick="addUser()">Add User</button>
+      <button class="cancel" onclick="closeUserForm()">Cancel</button>
+    </div>
+  </div>
+
+  <script>
+    // Function to switch pages
+    function showPage(page) {
+      document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+      document.getElementById(page).style.display = 'block';
+    }
+
+    function openUserForm() {
+      document.getElementById('userForm').style.display = 'flex';
+    }
+
+    function closeUserForm() {
+      document.getElementById('userForm').style.display = 'none';
+      document.getElementById('userName').value = '';
+      document.getElementById('userEmail').value = '';
+      document.getElementById('userPassword').value = '';
+    }
+
+    function addUser() {
+      const name = document.getElementById('userName').value.trim();
+      const email = document.getElementById('userEmail').value.trim();
+      const password = document.getElementById('userPassword').value.trim();
+
+      if (name && email && password) {
+        fetch("http://localhost:5000/admin/create-user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ name, email, password })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.userId) {
+            addUserRow(data.userId, name, email, password);
+            closeUserForm();
+            updateUserCounts(1, 1);
+            alert("✅ User created successfully!");
+          } else {
+            alert("❌ " + (data.error || "Failed to create user."));
+          }
+        })
+        .catch(err => {
+          console.error("Error creating user:", err);
+          alert("❌ Failed to connect to server.");
+        });
+      } else {
+        alert('⚠️ Please enter valid name, email, and password.');
+      }
+    }
+
+    function addUserRow(userId, name, email, password) {
+      const userList = document.getElementById('userList');
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${name}</td>
+        <td>${email}</td>
+        <td><input type="password" value="${password}" readonly /></td>
+        <td>
+          <button onclick="deleteUser('${userId}')">Delete</button>
+          <button onclick="changePassword('${userId}')">Change Password</button>
+        </td>
+      `;
+      userList.appendChild(row);
+    }
+
+    function deleteUser(userId) {
+      fetch(`http://localhost:5000/admin/delete-user/${userId}`, {
+        method: "DELETE"
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.message) {
+          const rows = document.querySelectorAll('#userList tr');
+          rows.forEach(row => {
+            if (row.innerHTML.includes(`deleteUser('${userId}')`)) {
+              row.remove();
+            }
+          });
+          updateUserCounts(-1, -1);
+          alert("✅ User deleted successfully!");
+        } else {
+          alert("❌ Failed to delete user.");
+        }
+      })
+      .catch(err => {
+        console.error("Error deleting user:", err);
+        alert("❌ Failed to connect to server.");
+      });
+    }
+
+    function changePassword(userId) {
+      const newPassword = prompt("Enter new password:");
+      if (newPassword) {
+        fetch(`http://localhost:5000/admin/change-password/${userId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ password: newPassword })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.message) {
+            alert("✅ Password changed successfully!");
+            const rows = document.querySelectorAll('#userList tr');
+            rows.forEach(row => {
+              if (row.innerHTML.includes(`changePassword('${userId}')`)) {
+                row.cells[2].querySelector('input').value = newPassword;
+              }
+            });
+          } else {
+            alert("❌ Failed to change password.");
+          }
+        })
+        .catch(err => {
+          console.error("Error changing password:", err);
+          alert("❌ Failed to connect to server.");
+        });
+      }
+    }
+
+    function updateUserCounts(totalChange, activeChange) {
+      const totalUsers = document.getElementById('totalUsers');
+      const activeUsers = document.getElementById('activeUsers');
+
+      totalUsers.textContent = parseInt(totalUsers.textContent) + totalChange;
+      activeUsers.textContent = parseInt(activeUsers.textContent) + activeChange;
+    }
+
+    function fetchUsers() {
+      fetch("http://localhost:5000/admin/get-users")
+      .then(res => res.json())
+      .then(data => {
+        if (data.users && data.users.length > 0) {
+          data.users.forEach(user => {
+            addUserRow(user._id, user.name, user.username, user.password);
+          });
+        }
+      })
+      .catch(err => console.error("Error fetching users:", err));
+    }
+
+    // Initial values and fetch
+    document.getElementById('totalUsers').textContent = 100;
+    document.getElementById('activeUsers').textContent = 80;
+    document.addEventListener('DOMContentLoaded', fetchUsers);
+  </script>
+
+</body>
+</html>
