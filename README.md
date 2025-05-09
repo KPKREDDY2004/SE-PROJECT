@@ -54,3 +54,5 @@ DataBase : MongoDB Atlas
 Once admin creates user in the search type http://localhost:5000/login.html which will take you to login page login with the same email and password were adimn entered. If your login is successful you will be diverted to home.html.
 In home.html page we can create an event with name of an event which includes date and time and also venue. And we also have a feature where users can create and delete events parallely. And we also make shoure that there will be no double booking in on same date and time and also same venue also. If we try to book we will get message like this slot is booked by with that persons email.
 All the details like usere details and events will be posted to database.
+
+video link of our presentation: 
